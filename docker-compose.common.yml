@@ -95,13 +95,14 @@ services:
       VIRTUAL_HOST: mail.${DOCKER_BASE_DOMAIN}
       VIRTUAL_PORT: 8025
 
-  # Add in the admin_release service even though we might not need its contents
-  # if we're running in dev-mode.
-  # The reason we still add it in common is in order for docker-compose down
-  # to know that the container needs to be removed when we switch from release-
-  # to dev-mode.
-  admin_release:
-    image: ${PROJECT_IMAGE_REPOSITORY}/os2display-admin-release:${ADMIN_RELEASE_TAG}
+# Not used as we don't support release-iamges
+#  # Add in the admin_release service even though we might not need its contents
+#  # if we're running in dev-mode.
+#  # The reason we still add it in common is in order for docker-compose down
+#  # to know that the container needs to be removed when we switch from release-
+#  # to dev-mode.
+#  admin_release:
+#    image: ${PROJECT_IMAGE_REPOSITORY}/os2display-admin-release:${ADMIN_RELEASE_TAG}
 
 volumes:
   es-data:

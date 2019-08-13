@@ -26,7 +26,8 @@ reset-dev: _dc_compile_dev _reset-container-state _show_notes ## Development-mod
 
 reset-dev-nfs: _dc_compile_dev_nfs _reset-container-state _show_notes ## Development-mode with NFS: stop all containers, reset their state and start up again.
 
-reset-release: _dc_compile_release _reset-container-state _show_notes ## Release-test mode: stop all containers, reset their state and start up again.
+# We don't support releases for kdb
+# reset-release: _dc_compile_release _reset-container-state _show_notes ## Release-test mode: stop all containers, reset their state and start up again.
 
 up:  ## Take the whole environment up without altering the existing state of the containers.
 	docker-compose up -d --remove-orphans
@@ -60,6 +61,22 @@ clone-admin: ## Do an initial clone of the admin repo.
 #		-w /app/src/my-custom-bundle/ \
 #		node:8.16.0-slim \
 #		sh -c "yarn && yarn run gulp"
+
+gulp:
+	docker run \
+		-ti \
+		-v $(PWD)/development/admin/:/app \
+		-w /app/src/kkbding2-bundle/ \
+		node:8.16.0-slim \
+		sh -c "yarn && yarn run gulp"
+
+gulp-watch:
+	docker run \
+		-ti \
+		-v $(PWD)/development/admin/:/app \
+		-w /app/src/kkbding2-bundle/ \
+		node:8.16.0-slim \
+		sh -c "yarn && yarn run gulp watch"
 
 ifeq (,$(wildcard ./docker-compose.override.yml))
     dc_override =
@@ -101,10 +118,11 @@ _reset-container-state:
 	docker-compose down -v --remove-orphans || true
 	docker-compose down -v --remove-orphans
 	docker-compose up -d
-# TODO - when resetting a release we should wait for admin_php to copy its files
-#        before invoking _docker-init-environment. Until then we leave a sleep
-#        here
-	sleep 5
+# We dont support releases for kdb so no need to sleep.
+## TODO - when resetting a release we should wait for admin_php to copy its files
+##        before invoking _docker-init-environment. Until then we leave a sleep
+##        here
+#	sleep 5
 	docker-compose exec admin-php bash -c "wait-for-it -t 60 admin-db:3306 && wait-for-it -t 60 elasticsearch:9200 && /opt/development/scripts/_docker-init-environment.sh"
 
 _dc_compile_release:
