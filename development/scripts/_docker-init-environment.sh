@@ -31,24 +31,25 @@ done
 if [[ ! -f /var/www/admin/.release ]]; then
   echo "Live source mount - doing a composer install"
   mkdir -p vendor
-  chown www-data -R vendor
+  gosu chown www-data -R vendor
   mkdir -p ../.composer
-  chown www-data -R ../.composer
+  gosu chown www-data -R ../.composer
   mkdir -p bin
-  chown www-data -R bin
+  gosu chown www-data -R bin
   mkdir -p web
-  chown www-data -R web
+  gosu chown www-data -R web
   mkdir -p vendor
-  chown www-data -R vendor
+  gosu chown www-data -R vendor
   touch composer.lock
-  chown www-data -R composer.lock
+  gosu chown www-data -R composer.lock
   mkdir -p var
-  chown www-data -R var
-  chown www-data app/config/parameters.yml
+  gosu chown www-data -R var
+  gosu chown www-data app/config/parameters.yml
 
-  gosu www-data composer install
+  gosu www-data composer install --prefer-source
+  chmod -R ug+rwX,o+rX,o-w,g+s .
 else
-  echo "Release-build detected, skipping composer install"
+  echo "Release-build detected, skipping composer install --"
 fi
 
 # Import upload backup.
