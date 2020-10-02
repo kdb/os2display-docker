@@ -31,20 +31,20 @@ done
 if [[ ! -f /var/www/admin/.release ]]; then
   echo "Live source mount - doing a composer install"
   mkdir -p vendor
-  gosu chown www-data -R vendor
+  gosu www-data chown www-data -R vendor
   mkdir -p ../.composer
-  gosu chown www-data -R ../.composer
+  gosu www-data chown www-data -R ../.composer
   mkdir -p bin
-  gosu chown www-data -R bin
+  gosu www-data chown www-data -R bin
   mkdir -p web
-  gosu chown www-data -R web
+  gosu www-data chown www-data -R web
   mkdir -p vendor
-  gosu chown www-data -R vendor
+  gosu www-data chown www-data -R vendor
   touch composer.lock
-  gosu chown www-data -R composer.lock
+  gosu www-data chown www-data -R composer.lock
   mkdir -p var
-  gosu chown www-data -R var
-  gosu chown www-data app/config/parameters.yml
+  gosu www-data chown www-data -R var
+  gosu www-data chown www-data app/config/parameters.yml
 
   gosu www-data composer install --prefer-source
   chmod -R ug+rwX,o+rX,o-w,g+s .
